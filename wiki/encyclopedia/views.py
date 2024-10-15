@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django import forms
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 import markdown2
 import random
@@ -88,4 +89,30 @@ def edit_page(request, title):
 #Search Query
 def search(request):
 
-    return render(request, "encyclopedia/search.html")
+    query = request.GET.get('q', '')
+    entries = util.list_entries()
+    matches = []
+    
+
+    #Handling empty querry before processing entries
+    if not query:
+        return render (request, "encyclopedia/search.html", {
+            "query": query,
+            "entries": [],
+            "matches": []
+        })
+    
+    # Finding matches between query and the list of entries
+    for entry in entries:
+
+        if query.lower() == entry.lower():
+            return redirect(reverse('entry', args=[entry]))
+        
+        elif query.lower() in entry.lower():
+            matches.append(entry)
+            # print(f"Matched entry:{entry}")
+        
+    return render(request, "encyclopedia/search.html", {
+        "query": query,
+        "matches": matches
+    })
