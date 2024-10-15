@@ -18,24 +18,30 @@ def index(request):
         "entries": util.list_entries()
     })
 
+#Entry View function. 
+
 def entry(request, title):
-    entry_content = markdown2.markdown(util.get_entry(title))
-    if entry_content is None:
-        return render(request, "encyclopedia/error.html", {
+    entry_content = (util.get_entry(title))
+
+    #check if the query requested by the user exist. If not the user is presented with an error message
+    if entry_content is None or entry_content == "":
+        return render (request, "encyclopedia/404.html", {
             "message": "The requested page was not found."
         })
     else:
-        return render(request, "encyclopedia/entry.html", {
-        "entry": entry_content,
+        entry_content_markdown = markdown2.markdown(entry_content)
+        return render(request, "encyclopedia/entry.html", {    
+        "entry": entry_content_markdown,
         "title": title
         })  
 
+#Random View function. 
 def random_page(request):
     random_entry = random.choice(util.list_entries())
-    
     return redirect (f"/wiki/{random_entry}", {
     })
 
+#Add New Page view function
 def new_page(request):
     if request.method == "POST":
         form = NewPageForm(request.POST)
@@ -61,6 +67,7 @@ def new_page(request):
          "form":NewPageForm()
          })
 
+#Edit page view function
 def edit_page(request, title):
     current_content = util.get_entry(title)
 
@@ -77,3 +84,8 @@ def edit_page(request, title):
         "form":form,
         "title":title
     })
+
+#Search Query
+def search(request):
+
+    return render(request, "encyclopedia/search.html")

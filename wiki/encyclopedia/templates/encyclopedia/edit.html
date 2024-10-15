@@ -10,13 +10,15 @@ Edit {{ title }} Page
 
 <form action="{% url 'edit_page' title=title  %}" method="post">
     {% csrf_token %}
-    {{ form.as_p}}
-
     {% if error_message %}
     <div class="alert alert-danger">
         {{ error_message }}
     </div>
      {% endif %}
+
+    {{ form.as_p}}
+
+    
 
     <input type="submit">
 </form>

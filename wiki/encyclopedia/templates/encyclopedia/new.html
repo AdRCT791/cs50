@@ -5,17 +5,18 @@ Create New Wiki Page
 {% endblock %}
 
 {% block body %}
-    <h1>New New Wiki Page</h1>
+    <h1>Add Wiki Page</h1>
 
     <form action="{% url 'new_page' %}" method="post">
         {% csrf_token %}
-        {{ form.as_p}}
-
         {% if error_message %}
-        <div class="alert alert-danger">
+
+        <div class="alert alert-danger" role="alert">
             {{ error_message }}
         </div>
-         {% endif %}
+        {% endif %}
+
+        {{ form }}
 
         <input type="submit">
     </form>
